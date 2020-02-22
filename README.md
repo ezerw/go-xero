@@ -3,7 +3,7 @@
 WIP - Xero Client using OAuth 2.0
 
 Usage:
-```
+```go
 config := &xero.Config{
     AccessToken: "OAUTH2_ACCESS_TOKEN",
     TenantID:    "TENANT_ID",
