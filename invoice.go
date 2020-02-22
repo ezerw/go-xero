@@ -3,7 +3,6 @@ package xero
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 )
 
 const collectionURL = "Invoices"
@@ -11,7 +10,9 @@ const collectionURL = "Invoices"
 type (
 	// iClient is the Invoice client.
 	iClient struct {
-		Request *http.Request
+		InvoicesBaseURL string
+		AccessToken     AccessToken
+		TenantID        TenantID
 	}
 	// Invoice holds an Invoice structure.
 	Invoice struct {
@@ -51,36 +52,51 @@ type (
 )
 
 func (c client) Invoices() *iClient {
-	iUrl := fmt.Sprintf("%s/%s", ApiUrl, collectionURL)
+	return &iClient{
+		InvoicesBaseURL: fmt.Sprintf("%s/%s", ApiUrl, collectionURL),
+		AccessToken:     c.Config.AccessToken,
+		TenantID:        c.Config.TenantID,
+	}
+}
 
-	req, _ := http.NewRequest(http.MethodGet, iUrl, nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.Config.AccessToken))
-	req.Header.Set("Xero-tenant-id", fmt.Sprintf("%s", c.Config.TenantID))
+func (c *iClient) Get() ([]Invoice, error) {
+	req, _ := http.NewRequest(http.MethodGet, c.InvoicesBaseURL, nil)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	req.Header.Set("Xero-tenant-id", fmt.Sprintf("%s", c.TenantID))
 	req.Header.Set("Accept", "application/json")
 
-	return &iClient{Request: req}
+	var i Invoices
+	if err := getJson(req, &i); err != nil {
+		return nil, err
+	}
+
+	return i.Invoices, nil
 }
 
-func (i *iClient) Get() ([]Invoice, error) {
-	var invoices Invoices
-	if err := getJson(i.Request, &invoices); err != nil {
+func (c *iClient) Find(invoiceID string) (*Invoice, error) {
+	req, _ := http.NewRequest(http.MethodGet, c.InvoicesBaseURL+"/"+invoiceID, nil)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	req.Header.Set("Xero-tenant-id", fmt.Sprintf("%s", c.TenantID))
+	req.Header.Set("Accept", "application/json")
+
+	var i Invoices
+	if err := getJson(req, &i); err != nil {
 		return nil, err
 	}
 
-	return invoices.Invoices, nil
+	if i.Invoices == nil {
+		return nil, fmt.Errorf("error: Invoice not found")
+	}
+
+	return &i.Invoices[0], nil
 }
 
-func (i *iClient) Find(invoiceID string) (*Invoice, error) {
-	iUrl, err := url.Parse(i.Request.URL.String() + "/" + invoiceID)
-	if err != nil {
-		return nil, err
-	}
-	i.Request.URL = iUrl
+func (c *iClient) Create(i *Invoice) (*Invoice, error) {
+}
 
-	var invoices Invoices
-	if err := getJson(i.Request, &invoices); err != nil {
-		return nil, err
-	}
+func (c *iClient) Update(i *Invoice, ui Invoice) (*Invoice, error) {
+	return nil, nil
+}
 
-	return &invoices.Invoices[0], nil
+func (c *iClient) Delete(i Invoice) error {
 }
