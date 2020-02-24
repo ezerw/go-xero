@@ -4,29 +4,19 @@ WIP - Xero Client using OAuth 2.0
 
 Usage:
 ```go
-config := &xero.Config{
-    AccessToken: "OAUTH2_ACCESS_TOKEN",
-    TenantID:    "TENANT_ID",
-    Timeout:     5 * time.Second, // Request timeout
-}
+tokenSource := oauth2.StaticTokenSource(
+    &oauth2.Token{AccessToken: "ACCESS_TOKEN"}
+)
 
-xeroAPI, err := xero.NewClient(config)
-if err != nil {
-    fmt.Println(fmt.Errorf("error creating the client: %v", err))
-}
+ctx := context.Background()
+httpClient := oauth2.NewClient(ctx, tokenSource)
 
-// Get All invoices
-invoices, err := xeroAPI.Invoices().Get()
-if err != nil {
-    fmt.Println(fmt.Errorf("error getting all invoices: %v", err))
-}
+xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
 
-// Find one invoice
-invoice, err := xeroAPI.Invoices().Find("INVOICE_ID")
+invoices, err := xeroClient.Invoices.List(ctx)
 if err != nil {
-    fmt.Println(fmt.Errorf("error getting invoice: %v", err))
+    fmt.Println(fmt.Errorf("error getting invoices: %v", err))
 }
 
 fmt.Printf("%+v\n", invoices)
-fmt.Printf("%+v\n", invoice)
 ```
