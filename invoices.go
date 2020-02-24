@@ -11,34 +11,38 @@ type InvoicesService service
 
 // Invoice holds an Invoice structure.
 type Invoice struct {
-	Type            string        `json:"Type" xml:"Type"`
-	InvoiceID       string        `json:"InvoiceID,omitempty"`
-	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
-	Reference       string        `json:"Reference,omitempty"`
-	Payments        []Payment     `json:"payments,omitempty"`
-	CreditNotes     []CreditNote  `json:"CreditNotes,omitempty"`
-	Prepayments     []Prepayment  `json:"Prepayments,omitempty"`
-	OverPayments    []OverPayment `json:"Overpayments,omitempty"`
-	AmountDue       float64       `json:"AmountDue,omitempty"`
-	AmountPaid      float64       `json:"AmountPaid,omitempty"`
-	AmountCredited  float64       `json:"AmountCredited,omitempty"`
-	CurrencyRate    float64       `json:"CurrencyRate"`
-	IsDiscounted    bool          `json:"IsDiscounted"`
-	HasAttachments  bool          `json:"HasAttachments,omitempty"`
-	HasErrors       bool          `json:"HasErrors"`
-	Contact         Contact       `json:"Contact"`
-	DateString      string        `json:"DateString,omitempty"`
-	Date            string        `json:"Date"`
-	DueDateString   string        `json:"DueDateString,omitempty"`
-	DueDate         string        `json:"DueDate"`
-	Status          string        `json:"Status"`
-	LineAmountTypes string        `json:"LineAmountTypes,omitempty"`
-	LineItems       []LineItem    `json:"LineItems"`
-	SubTotal        float64       `json:"SubTotal,omitempty"`
-	TotalTax        float64       `json:"TotalTax,omitempty"`
-	Total           float64       `json:"Total,omitempty"`
-	UpdatedDateUTC  string        `json:"UpdatedDateUTC,omitempty"`
-	CurrencyCode    string        `json:"CurrencyCode"`
+	Type                string        `json:"Type"`
+	Contact             Contact       `json:"Contact"`
+	Date                string        `json:"Date"`
+	DueDate             string        `json:"DueDate"`
+	Status              string        `json:"Status"`
+	LineAmountTypes     string        `json:"LineAmountTypes,omitempty"`
+	LineItems           []LineItem    `json:"LineItems"`
+	SubTotal            float64       `json:"SubTotal,omitempty"`
+	TotalTax            float64       `json:"TotalTax,omitempty"`
+	Total               float64       `json:"Total,omitempty"`
+	TotalDiscount       float64       `json:"TotalDiscount"`
+	UpdatedDateUTC      string        `json:"UpdatedDateUTC,omitempty"`
+	CurrencyCode        string        `json:"CurrencyCode"`
+	CurrencyRate        float64       `json:"CurrencyRate"`
+	InvoiceID           string        `json:"InvoiceID"`
+	InvoiceNumber       string        `json:"InvoiceNumber"`
+	Reference           string        `json:"Reference,omitempty"`
+	BrandingThemeID     string        `json:"BrandingThemeID,omitempty"`
+	Url                 string        `json:"Url"`
+	SentToContact       bool          `json:"SentToContact"`
+	ExpectedPaymentDate string        `json:"ExpectedPaymentDate"`
+	PlannedPaymentDate  string        `json:"PlannedPaymentDate"`
+	HasAttachments      bool          `json:"HasAttachments"`
+	Payments            []Payment     `json:"Payments,omitempty"`
+	CreditNotes         []CreditNote  `json:"CreditNotes,omitempty"`
+	Prepayments         []Prepayment  `json:"Prepayments,omitempty"`
+	OverPayments        []OverPayment `json:"Overpayments,omitempty"`
+	AmountDue           float64       `json:"AmountDue,omitempty"`
+	AmountPaid          float64       `json:"AmountPaid,omitempty"`
+	CISDeduction        string        `json:"CISDeduction"`
+	FullyPaidOnDate     string        `json:"FullyPaidOnDate"`
+	AmountCredited      float64       `json:"AmountCredited,omitempty"`
 }
 
 // Invoices holds a normal response from the invoices endpoint.
