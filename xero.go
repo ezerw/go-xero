@@ -5,9 +5,7 @@ import (
 	"net/url"
 )
 
-const (
-	baseURL = "https://api.xero.com/api.xro/2.0"
-)
+const baseURL = "https://api.xero.com/api.xro/2.0"
 
 // TenantID used when communicating with the Xero API.
 type TenantID string
@@ -18,10 +16,10 @@ type service struct {
 
 // A Client manages communication with the Xero API.
 type Client struct {
-	client   *http.Client
+	client *http.Client
 
 	// Base URL for API requests.
-	BaseURL  *url.URL
+	BaseURL *url.URL
 
 	// Tenant used to do requests to API endpoints.
 	TenantID TenantID
