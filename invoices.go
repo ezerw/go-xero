@@ -66,12 +66,12 @@ func (s *InvoicesService) List(ctx context.Context) (*Invoices, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error: xero responded with %d status code", res.StatusCode)
+		return nil, fmt.Errorf("xero responded with %d status code", res.StatusCode)
 	}
 
 	var invoices *Invoices
 	if err := json.NewDecoder(res.Body).Decode(&invoices); err != nil {
-		return nil, fmt.Errorf("error: failed to decode json. %v", err)
+		return nil, fmt.Errorf("failed to decode json. %v", err)
 	}
 
 	return invoices, nil

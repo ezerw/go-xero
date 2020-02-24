@@ -25,6 +25,7 @@ func main() {
 	invoices, err := xeroClient.Invoices.List(ctx)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error getting invoices: %v", err))
+		return
 	}
 
 	fmt.Printf("%+v\n", invoices)
