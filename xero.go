@@ -1,6 +1,12 @@
 package xero
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -24,11 +30,11 @@ type Client struct {
 	// Tenant used to do requests to API endpoints.
 	TenantID TenantID
 
-	// Services used for talking to different parts of the Xero API.
-	Invoices *InvoicesService
-
 	// Reuse a single struct instead of allocating one for each service on the heap.
 	common service
+
+	// Services used for talking to different parts of the Xero API.
+	Invoices *InvoicesService
 }
 
 // NewClient returns a new Xero API client. If a nil httpClient is
@@ -49,7 +55,59 @@ func NewClient(httpClient *http.Client, tenantID TenantID) *Client {
 }
 
 // Do sends an API request and returns the API response.
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	//TODO: handle rate limit, custom response errors, etc
-	return c.client.Do(req)
+func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	res, err := c.client.Do(req)
+	if err != nil {
+		//TODO: handle rate limit, custom response errors, etc
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusUnauthorized {
+		//TODO: handle different errors by status code
+		return nil, fmt.Errorf("token has expired or is not valid %d", res.StatusCode)
+	}
+
+	if v != nil {
+		if err := json.NewDecoder(res.Body).Decode(v); err != nil {
+			if !errors.Is(err, io.EOF) { // ignore EOF errors caused by empty response body
+				return nil, err
+			}
+		}
+	}
+
+	return res, nil
+}
+
+func (c *Client) NewRequest(method string, url string, body interface{}) (*http.Request, error) {
+	u, err := c.BaseURL.Parse(url)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf io.ReadWriter
+	if body != nil {
+		buf = &bytes.Buffer{}
+		enc := json.NewEncoder(buf)
+		enc.SetEscapeHTML(false)
+		err := enc.Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest(method, u.String(), buf)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Xero-tenant-id", string(c.TenantID))
+
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	return req, nil
 }

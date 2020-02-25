@@ -5,6 +5,6 @@ type BrandingTheme struct {
 	Name            string `json:"Name"`
 	LogoUrl         string `json:"LogoUrl"`
 	Type            string `json:"Type"`
-	SortOrder       int32  `json:"SortOrder"`
+	SortOrder       int64  `json:"SortOrder"`
 	CreatedDateUTC  string `json:"CreatedDateUTC"`
 }

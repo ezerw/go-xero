@@ -9,7 +9,7 @@ type BatchPayment struct {
 	Narrative      string     `json:"Narrative"`             // UK Only
 	BatchPaymentID string     `json:"BatchPaymentID"`
 	Date           string     `json:"Date"`
-	Payments       []*Payment `json:"Payments"`
+	Payments       []Payment `json:"Payments"`
 	Type           string     `json:"Type"`
 	Status         string     `json:"Status"`
 	TotalAmount    float64    `json:"TotalAmount"`

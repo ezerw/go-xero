@@ -2,11 +2,11 @@ package xero
 
 type CreditNote struct {
 	Type             string        `json:"Type"`
-	Contact          *Contact      `json:"Contact"`
+	Contact          Contact      `json:"Contact"`
 	Date             string        `json:"Date"`
 	Status           string        `json:"Status"`
 	LineAmountTypes  string        `json:"LineAmountTypes"`
-	LineItems        []*LineItem   `json:"LineItems"`
+	LineItems        []LineItem   `json:"LineItems"`
 	SubTotal         float64       `json:"SubTotal"`
 	TotalTax         float64       `json:"TotalTax"`
 	Total            float64       `json:"Total"`
@@ -20,7 +20,7 @@ type CreditNote struct {
 	SentToContact    bool          `json:"SentToContact"`
 	CurrencyRate     float64       `json:"CurrencyRate"`
 	RemainingCredit  float64       `json:"RemainingCredit"`
-	Allocations      []*Allocation `json:"Allocations"`
+	Allocations      []Allocation `json:"Allocations"`
 	BrandingThemeID  string        `json:"BrandingThemeID"`
 	HasAttachments   bool          `json:"HasAttachments"`
 }

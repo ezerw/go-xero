@@ -2,7 +2,6 @@ package xero
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -54,29 +53,38 @@ type Invoices struct {
 func (s *InvoicesService) List(ctx context.Context) (*Invoices, error) {
 	u := fmt.Sprintf("%s/%s", s.client.BaseURL, "Invoices")
 
-	req, err := http.NewRequest(http.MethodGet, u, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
-	}
-
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Xero-tenant-id", string(s.client.TenantID))
-
-	res, err := s.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("xero responded with %d status code", res.StatusCode)
 	}
 
 	var invoices *Invoices
-	if err := json.NewDecoder(res.Body).Decode(&invoices); err != nil {
-		return nil, fmt.Errorf("failed to decode json. %v", err)
+	_, err = s.client.Do(ctx, req, &invoices)
+	if err != nil {
+		return nil, err
 	}
 
 	return invoices, nil
+}
+
+func (s *InvoicesService) GetByID(ctx context.Context, invoiceID string) (*Invoice, error) {
+	u := fmt.Sprintf("%s/%s/%s", s.client.BaseURL, "Invoices", invoiceID)
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var invoices *Invoices
+	_, err = s.client.Do(ctx, req, &invoices)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(invoices.Invoices) == 0 {
+		return nil, fmt.Errorf("invoice not found")
+	}
+
+	return &invoices.Invoices[0], nil
+
 }
