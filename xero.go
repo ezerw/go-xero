@@ -11,7 +11,18 @@ import (
 	"net/url"
 )
 
-const baseURL = "https://api.xero.com/api.xro/2.0"
+const (
+	baseURL = "https://api.xero.com/api.xro/2.0"
+
+	// Xero Rate limit response headers
+	// https://developer.xero.com/documentation/oauth2/limits
+	headerRateDayLimitRemain = "X-DayLimit-Remaining" // Number of remaining Day limit.
+	headerRateMinLimitRemain = "X-MinLimit-Remaining" // Number of remaining Minute limit.
+	headerRateLimit          = "X-Rate-Limit-Problem" // Which limit you have reached.
+	headerRateRetry          = "Retry-After"          // How many seconds to wait before making another request.
+
+	mediaTypeJSON = "application/json"
+)
 
 // TenantID used when communicating with the Xero API.
 type TenantID string
@@ -106,11 +117,11 @@ func (c *Client) NewRequest(method string, url string, body interface{}) (*http.
 		return nil, err
 	}
 
-	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Accept", mediaTypeJSON)
 	req.Header.Set("Xero-tenant-id", string(c.TenantID))
 
 	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", mediaTypeJSON)
 	}
 
 	return req, nil
