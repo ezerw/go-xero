@@ -104,10 +104,7 @@ func (c *Client) NewRequest(method string, url string, body interface{}) (*http.
 	var buf io.ReadWriter
 	if body != nil {
 		buf = &bytes.Buffer{}
-		enc := json.NewEncoder(buf)
-		enc.SetEscapeHTML(false)
-		err := enc.Encode(body)
-		if err != nil {
+		if err := json.NewEncoder(buf).Encode(body); err != nil {
 			return nil, err
 		}
 	}
