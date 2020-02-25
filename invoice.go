@@ -46,7 +46,7 @@ type Invoice struct {
 
 // Invoices holds a normal response from the invoices endpoint.
 type Invoices struct {
-	Invoices []Invoice `json:"Invoices"`
+	Invoices []*Invoice `json:"Invoices"`
 }
 
 // List will returns all invoices for the authenticated user.
@@ -85,6 +85,6 @@ func (s *InvoicesService) GetByID(ctx context.Context, invoiceID string) (*Invoi
 		return nil, fmt.Errorf("invoice not found")
 	}
 
-	return &invoices.Invoices[0], nil
+	return invoices.Invoices[0], nil
 
 }

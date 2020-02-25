@@ -54,7 +54,9 @@ func NewClient(httpClient *http.Client, tenantID TenantID) *Client {
 	return c
 }
 
-// Do sends an API request and returns the API response.
+// Do sends an API request and returns the API response. The API response is
+// JSON decoded and stored in the value pointed to by v, or returned as an
+// error if an API error has occurred.
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	res, err := c.client.Do(req)
 	if err != nil {
@@ -80,6 +82,8 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	return res, nil
 }
 
+// NewRequest creates an API request. If specified, the value pointed to by body is JSON encoded and included as the
+// request body.
 func (c *Client) NewRequest(method string, url string, body interface{}) (*http.Request, error) {
 	u, err := c.BaseURL.Parse(url)
 	if err != nil {
