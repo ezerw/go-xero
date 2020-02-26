@@ -114,6 +114,7 @@ func (c *Client) NewRequest(method string, url string, body interface{}) (*http.
 		if err := json.NewEncoder(buf).Encode(body); err != nil {
 			return nil, err
 		}
+		fmt.Println(buf)
 	}
 
 	req, err := http.NewRequest(method, u.String(), buf)

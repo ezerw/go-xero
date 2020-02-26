@@ -51,7 +51,7 @@ type Invoices struct {
 	Invoices []*Invoice `json:"Invoices"`
 }
 
-// List will returns all invoices for the authenticated user.
+// List fetch the full list of invoices and returns them
 func (s *InvoicesService) List(ctx context.Context) ([]*Invoice, error) {
 	req, err := s.client.NewRequest(http.MethodGet, InvoicesBaseURL, nil)
 	if err != nil {
@@ -67,6 +67,7 @@ func (s *InvoicesService) List(ctx context.Context) ([]*Invoice, error) {
 	return i.Invoices, nil
 }
 
+// GetByID fetch an Invoice from Xero and returns it.
 func (s *InvoicesService) GetByID(ctx context.Context, invoiceID string) (*Invoice, error) {
 	u := fmt.Sprintf("%s/%s", InvoicesBaseURL, invoiceID)
 
@@ -88,6 +89,7 @@ func (s *InvoicesService) GetByID(ctx context.Context, invoiceID string) (*Invoi
 	return i.Invoices[0], nil
 }
 
+// Create creates and invoice.
 func (s *InvoicesService) Create(ctx context.Context, invoice *Invoice) (*Invoice, error) {
 	req, err := s.client.NewRequest(http.MethodPut, InvoicesBaseURL, invoice)
 	if err != nil {
@@ -103,6 +105,7 @@ func (s *InvoicesService) Create(ctx context.Context, invoice *Invoice) (*Invoic
 	return i.Invoices[0], nil
 }
 
+// CreateMulti creates multiple invoices on Xero in a single call.
 func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) ([]*Invoice, error) {
 	req, err := s.client.NewRequest(http.MethodPut, InvoicesBaseURL, invoices)
 	if err != nil {
@@ -116,4 +119,22 @@ func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) (
 	}
 
 	return i.Invoices, nil
+}
+
+// Update updates an invoice in Xero
+func (s *InvoicesService) Update(ctx context.Context, invoiceID string, invoice *Invoice) (*Invoice, error) {
+	u := fmt.Sprintf("%s/%s", InvoicesBaseURL, invoiceID)
+
+	req, err := s.client.NewRequest(http.MethodPost, u, invoice)
+	if err != nil {
+		return nil, err
+	}
+
+	var i *Invoices
+	_, err = s.client.Do(ctx, req, &i)
+	if err != nil {
+		return nil, err
+	}
+
+	return i.Invoices[0], nil
 }

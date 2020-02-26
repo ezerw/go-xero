@@ -22,43 +22,24 @@ func main() {
 	xeroClient := xero.NewClient(httpClient, xero.TenantID(TenantID))
 
 	lineItem := xero.LineItem{
-		Description: "Importing & Exporting Services",
-		Quantity:    2.00,
-		UnitAmount:  100.00,
+		Description: "Single hammer",
+		Quantity:    1.00,
+		UnitAmount:  20.00,
 		AccountCode: "200",
 	}
 
-	invoiceOne := &xero.Invoice{
-		Type: "ACCREC",
-		Contact: xero.Contact{
-			Name: "Eze Rodriguez",
-		},
-
-		LineAmountTypes: "Inclusive",
-		LineItems:       []xero.LineItem{},
+	invoice := &xero.Invoice{
+		Type:      "ACCREC",
+		LineItems: []xero.LineItem{},
 	}
 
-	invoiceTwo := &xero.Invoice{
-		Type: "ACCREC",
-		Contact: xero.Contact{
-			Name: "Eze Rodriguez",
-		},
+	invoice.LineItems = append(invoice.LineItems, lineItem)
 
-		LineAmountTypes: "Inclusive",
-		LineItems:       []xero.LineItem{},
-	}
-
-	invoiceOne.LineItems = append(invoiceOne.LineItems, lineItem)
-	invoiceTwo.LineItems = append(invoiceTwo.LineItems, lineItem)
-
-	var invoices xero.Invoices
-	invoices.Invoices = append(invoices.Invoices, invoiceOne, invoiceTwo)
-
-	createdInvoices, err := xeroClient.Invoices.CreateMulti(ctx, &invoices)
+	updatedInvoice, err := xeroClient.Invoices.Update(ctx, "INVOICE_ID", invoice)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error: %v", err))
 		return
 	}
 
-	fmt.Printf("%+v\n", createdInvoices)
+	fmt.Printf("%+v\n", updatedInvoice)
 }
