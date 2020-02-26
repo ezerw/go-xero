@@ -2,7 +2,7 @@
 
 WIP - Xero Client using OAuth 2.0
 
-##Usage:
+## Usage:
 
 ```go
 tokenSource := oauth2.StaticTokenSource(
@@ -15,21 +15,21 @@ httpClient := oauth2.NewClient(ctx, tokenSource)
 xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
 ````
 
-###Get tenant invoices
+### Get tenant invoices
 ```go
 invoices, err := xeroClient.Invoices.List(ctx)
 if err != nil {
     fmt.Println(fmt.Errorf("error getting invoices: %v", err))
 }
 ```
-###Get an Invoice by ID
+### Get an Invoice by ID
 ```go
 invoices, err := xeroClient.Invoices.GetById(ctx, "INVOICE_ID")
 if err != nil {
     fmt.Println(fmt.Errorf("error getting invoice: %v", err))
 }
 ```
-###Create an Invoice
+### Create an Invoice
 ```go
 lineItem := xero.LineItem{
     Description: "Importing & Exporting Services",
