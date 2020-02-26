@@ -10,7 +10,7 @@ var InvoicesBaseURL = fmt.Sprintf("%s/Invoices", baseURL)
 
 type InvoicesService service
 
-// Invoice holds an Invoice structure.
+// Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation
 type Invoice struct {
 	Type                string         `json:"Type"`
 	Contact             Contact        `json:"Contact"`

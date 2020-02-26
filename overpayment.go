@@ -1,22 +1,28 @@
 package xero
 
+// Overpayment is used when a debtor overpays an invoice.
 type OverPayment struct {
-	Type            string       `json:"Type"`
+	Type            string       `json:"Type,omitempty"`
 	Contact         Contact      `json:"Contact"`
-	Date            string       `json:"Date"`
+	Date            string       `json:"Date,omitempty"`
 	DateString      string       `json:"DateString,omitempty"`
-	Status          string       `json:"Status"`
+	Status          string       `json:"Status,omitempty"`
 	LineAmountTypes string       `json:"LineAmountTypes,omitempty"`
-	LineItems       []LineItem   `json:"LineItems"`
-	SubTotal        string       `json:"SubTotal"`
-	TotalTax        string       `json:"TotalTax"`
-	Total           string       `json:"Total"`
-	UpdatedDateUTC  string       `json:"UpdatedDateUTC"`
-	CurrencyCode    string       `json:"CurrencyCode"`
-	OverpaymentID   string       `json:"OverpaymentID"`
-	CurrencyRate    string       `json:"CurrencyRate"`
-	RemainingCredit string       `json:"RemainingCredit"`
-	Allocations     []Allocation `json:"Allocations"`
-	Payments        []Payment    `json:"Payments"`
-	HasAttachments  string       `json:"HasAttachments"`
+	LineItems       []LineItem   `json:"LineItems,omitempty"`
+	SubTotal        string       `json:"SubTotal,omitempty"`
+	TotalTax        string       `json:"TotalTax,omitempty"`
+	Total           string       `json:"Total,omitempty"`
+	UpdatedDateUTC  string       `json:"UpdatedDateUTC,omitempty"`
+	CurrencyCode    string       `json:"CurrencyCode,omitempty"`
+	OverpaymentID   string       `json:"OverpaymentID,omitempty"`
+	CurrencyRate    string       `json:"CurrencyRate,omitempty"`
+	RemainingCredit string       `json:"RemainingCredit,omitempty"`
+	Allocations     []Allocation `json:"Allocations,omitempty"`
+	Payments        []Payment    `json:"Payments,omitempty"`
+	HasAttachments  string       `json:"HasAttachments,omitempty"`
+}
+
+// OverPayments is a collection of OverPayments.
+type OverPayments struct {
+	OverPayments []OverPayment `json:"Overpayments"`
 }

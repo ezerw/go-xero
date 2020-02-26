@@ -1,26 +1,41 @@
 package xero
 
-type (
-	Address struct {
-		AddressType  string `json:"AddressType"`
-		AddressLine1 string `json:"AddressLine1"`
-		AddressLine2 string `json:"AddressLine2"`
-		AddressLine3 string `json:"AddressLine3"`
-		AddressLine4 string `json:"AddressLine4"`
-		City         string `json:"City"`
-		Region       string `json:"Region"`
-		PostalCode   string `json:"PostalCode"`
-		Country      string `json:"Country"`
-		AttentionTo  string `json:"AttentionTo"`
-	}
+type Address struct {
+	AddressType  string `json:"AddressType,omitempty"`
+	AddressLine1 string `json:"AddressLine1,omitempty"`
+	AddressLine2 string `json:"AddressLine2,omitempty"`
+	AddressLine3 string `json:"AddressLine3,omitempty"`
+	AddressLine4 string `json:"AddressLine4,omitempty"`
+	City         string `json:"City,omitempty"`
+	Region       string `json:"Region,omitempty"`
+	PostalCode   string `json:"PostalCode,omitempty"`
+	Country      string `json:"Country,omitempty"`
+	AttentionTo  string `json:"AttentionTo,omitempty"`
+}
 
-	Phone struct {
-		PhoneType        string `json:"PhoneType"`
-		PhoneNumber      string `json:"PhoneNumber"`
-		PhoneAreaCode    string `json:"PhoneAreaCode"`
-		PhoneCountryCode string `json:"PhoneCountryCode"`
-	}
-)
+type Phone struct {
+	PhoneType        string `json:"PhoneType,omitempty"`
+	PhoneNumber      string `json:"PhoneNumber,omitempty"`
+	PhoneAreaCode    string `json:"PhoneAreaCode,omitempty"`
+	PhoneCountryCode string `json:"PhoneCountryCode,omitempty"`
+}
+
+type ContactPerson struct {
+	FirstName       string `json:"FirstName,omitempty"`
+	LastName        string `json:"LastName,omitempty"`
+	EmailAddress    string `json:"EmailAddress,omitempty"`
+	IncludeInEmails bool   `json:"IncludeInEmails,omitempty"`
+}
+
+type Balance struct {
+	Outstanding float64 `json:"Outstanding,omitempty"`
+	Overdue     float64 `json:"Overdue,omitempty"`
+}
+
+type Balances struct {
+	AccountsReceivable Balance `json:"AccountsReceivable,omitempty"`
+	AccountsPayable    Balance `json:"AccountsPayable,omitempty"`
+}
 
 type Contact struct {
 	ContactID                   string             `json:"ContactID,omitempty"`
@@ -56,6 +71,10 @@ type Contact struct {
 	BrandingTheme               *BrandingTheme     `json:"BrandingTheme,omitempty"`
 	BatchPayments               *BatchPayment      `json:"BatchPayments,omitempty"`
 	Discount                    string             `json:"Discount,omitempty"`
-	Balances                    string             `json:"Balances,omitempty"`
+	Balances                    *Balances          `json:"Balances,omitempty"`
 	HasAttachments              bool               `json:"HasAttachments,omitempty"`
+}
+
+type Contacts struct {
+	Contacts []Contact `json:"Contacts"`
 }
