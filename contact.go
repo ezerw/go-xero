@@ -23,25 +23,25 @@ type (
 )
 
 type Contact struct {
-	ContactID                   string             `json:"ContactID"`
-	ContactNumber               string             `json:"ContactNumber"`
-	AccountNumber               string             `json:"AccountNumber"`
-	ContactStatus               string             `json:"ContactStatus"`
-	Name                        string             `json:"Name"`
-	FirstName                   string             `json:"FirstName"`
-	LastName                    string             `json:"LastName"`
-	EmailAddress                string             `json:"EmailAddress"`
-	SkypeUserName               string             `json:"SkypeUserName"`
-	BankAccountDetails          string             `json:"BankAccountDetails"`
-	TaxNumber                   string             `json:"TaxNumber"`
-	AccountsReceivableTaxType   string             `json:"AccountsReceivableTaxType"`
-	AccountsPayableTaxType      string             `json:"AccountsPayableTaxType"`
-	Addresses                   []Address          `json:"Addresses"`
-	Phones                      []Phone            `json:"Phones"`
-	IsSupplier                  bool               `json:"IsSupplier"`
-	IsCustomer                  bool               `json:"IsCustomer"`
-	DefaultCurrency             string             `json:"DefaultCurrency"`
-	UpdatedDateUTC              string             `json:"UpdatedDateUTC"`
+	ContactID                   string             `json:"ContactID,omitempty"`
+	ContactNumber               string             `json:"ContactNumber,omitempty"`
+	AccountNumber               string             `json:"AccountNumber,omitempty"`
+	ContactStatus               string             `json:"ContactStatus,omitempty"`
+	Name                        string             `json:"Name,omitempty"`
+	FirstName                   string             `json:"FirstName,omitempty"`
+	LastName                    string             `json:"LastName,omitempty"`
+	EmailAddress                string             `json:"EmailAddress,omitempty"`
+	SkypeUserName               string             `json:"SkypeUserName,omitempty"`
+	BankAccountDetails          string             `json:"BankAccountDetails,omitempty"`
+	TaxNumber                   string             `json:"TaxNumber,omitempty"`
+	AccountsReceivableTaxType   string             `json:"AccountsReceivableTaxType,omitempty"`
+	AccountsPayableTaxType      string             `json:"AccountsPayableTaxType,omitempty"`
+	Addresses                   []Address          `json:"Addresses,omitempty"`
+	Phones                      []Phone            `json:"Phones,omitempty"`
+	IsSupplier                  bool               `json:"IsSupplier,omitempty"`
+	IsCustomer                  bool               `json:"IsCustomer,omitempty"`
+	DefaultCurrency             string             `json:"DefaultCurrency,omitempty"`
+	UpdatedDateUTC              string             `json:"UpdatedDateUTC,omitempty"`
 	ContactPersons              []ContactPerson    `json:"ContactPersons,omitempty"`
 	XeroNetworkKey              string             `json:"XeroNetworkKey,omitempty"`
 	SalesDefaultAccountCode     string             `json:"SalesDefaultAccountCode,omitempty"`
@@ -53,8 +53,8 @@ type Contact struct {
 	PaymentTerms                string             `json:"PaymentTerms,omitempty"`
 	ContactGroups               []ContactGroup     `json:"ContactGroups,omitempty"`
 	Website                     string             `json:"Website,omitempty"`
-	BrandingTheme               BrandingTheme      `json:"BrandingTheme,omitempty"`
-	BatchPayments               BatchPayment       `json:"BatchPayments,omitempty"`
+	BrandingTheme               *BrandingTheme     `json:"BrandingTheme,omitempty"`
+	BatchPayments               *BatchPayment      `json:"BatchPayments,omitempty"`
 	Discount                    string             `json:"Discount,omitempty"`
 	Balances                    string             `json:"Balances,omitempty"`
 	HasAttachments              bool               `json:"HasAttachments,omitempty"`
