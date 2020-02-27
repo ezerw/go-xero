@@ -98,23 +98,33 @@ if err != nil {
 
 ### Update an Invoice
 ```go
-lineItem := xero.LineItem{
-    Description: "Single hammer",
-    Quantity:    1.00,
-    UnitAmount:  20.00,
-    AccountCode: "200",
-}
-
+// Existing Invoice
 invoice := &xero.Invoice{
-    Type:      "ACCREC", // Required by Xero API
-    LineItems: []xero.LineItem{},
+    InvoiceID: "EXISTING_INVOICE_ID",
+    Type:      "ACCREC",
+    Contact: xero.Contact{
+        Name: "John Doe",
+    },
+    Reference:       "Invoice Reference",
+    LineAmountTypes: "Inclusive",
+    LineItems: []xero.LineItem{{
+        Description: "Single Item",
+        Quantity:    1.00,
+        UnitAmount:  10.50,
+        AccountCode: "200",
+    }},
 }
 
-invoice.LineItems = append(invoice.LineItems, lineItem)
+// Update one field of the invoice
+invoice.Reference = "New reference"
 
-updatedInvoice, err := xeroClient.Invoices.Update(ctx, "INVOICE_ID", invoice)
+i, err := client.Invoices.Update(ctx, invoice)
 if err != nil {
-    fmt.Println(fmt.Errorf("error: %v", err))
-    return
+    return nil, err
 }
+
+fmt.Println("Invoice updated.")
+fmt.Printf("InvoiceID: %s\n", i.InvoiceID)
+fmt.Printf("InvoiceNumber: %s\n", i.InvoiceNumber)
+fmt.Printf("Reference: %s\n", i.Reference)
 ```

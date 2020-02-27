@@ -82,7 +82,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	case http.StatusUnauthorized:
 		return nil, fmt.Errorf("token has expired or is not valid %d", res.StatusCode)
 	case http.StatusBadRequest:
-		var err *BadRequestError
+		var err BadRequestError
 		if err := json.NewDecoder(res.Body).Decode(&err); err != nil {
 			return nil, fmt.Errorf("failed to read error response body %s", err)
 		}

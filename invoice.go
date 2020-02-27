@@ -2,6 +2,7 @@ package xero
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -10,7 +11,7 @@ var InvoicesBaseURL = fmt.Sprintf("%s/Invoices", baseURL)
 
 type InvoicesService service
 
-// Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation
+// Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation.
 type Invoice struct {
 	Type                string         `json:"Type"`
 	Contact             Contact        `json:"Contact"`
@@ -51,7 +52,7 @@ type Invoices struct {
 	Invoices []*Invoice `json:"Invoices"`
 }
 
-// List fetch the full list of invoices and returns them
+// List fetch the full list of invoices and returns them.
 func (s *InvoicesService) List(ctx context.Context) ([]*Invoice, error) {
 	req, err := s.client.NewRequest(http.MethodGet, InvoicesBaseURL, nil)
 	if err != nil {
@@ -121,16 +122,23 @@ func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) (
 	return i.Invoices, nil
 }
 
-// Update updates an invoice in Xero
-func (s *InvoicesService) Update(ctx context.Context, invoiceID string, invoice *Invoice) (*Invoice, error) {
-	u := fmt.Sprintf("%s/%s", InvoicesBaseURL, invoiceID)
+// Update updates an invoice in Xero.
+// It receives an existing Xero invoice and does a POST request to update it using it InvoiceID.
+func (s *InvoicesService) Update(ctx context.Context, invoice *Invoice) (*Invoice, error) {
+	if invoice.InvoiceID == "" {
+		return nil, errors.New("the InvoiceID field must not be empty")
+	}
 
-	req, err := s.client.NewRequest(http.MethodPost, u, invoice)
+	if invoice.Type == "" {
+		return nil, errors.New("the Type field must not be empty")
+	}
+
+	req, err := s.client.NewRequest(http.MethodPost, InvoicesBaseURL, invoice)
 	if err != nil {
 		return nil, err
 	}
 
-	var i *Invoices
+	var i Invoices
 	_, err = s.client.Do(ctx, req, &i)
 	if err != nil {
 		return nil, err

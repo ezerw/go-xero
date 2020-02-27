@@ -21,25 +21,41 @@ func main() {
 
 	xeroClient := xero.NewClient(httpClient, xero.TenantID(TenantID))
 
-	lineItem := xero.LineItem{
-		Description: "Single hammer",
-		Quantity:    1.00,
-		UnitAmount:  20.00,
-		AccountCode: "200",
-	}
-
-	invoice := &xero.Invoice{
-		Type:      "ACCREC",
-		LineItems: []xero.LineItem{},
-	}
-
-	invoice.LineItems = append(invoice.LineItems, lineItem)
-
-	updatedInvoice, err := xeroClient.Invoices.Update(ctx, "INVOICE_ID", invoice)
+	// Update an invoice
+	i, err := updateInvoice(ctx, xeroClient)
 	if err != nil {
-		fmt.Println(fmt.Errorf("error: %v", err))
+		fmt.Println(err.Error())
 		return
 	}
 
-	fmt.Printf("%+v\n", updatedInvoice)
+	fmt.Printf("Updated invoice #%s", i.InvoiceNumber)
+}
+
+func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
+	invoice := &xero.Invoice{
+		InvoiceID: "50a9f77e-caf4-40ef-9ab0-0c771accfdbf",
+		Type:      "ACCREC",
+		Contact: xero.Contact{
+			Name: "New",
+		},
+		Reference:       "Some reference",
+		LineAmountTypes: "Inclusive",
+		LineItems: []xero.LineItem{{
+			Description: "Line Item #2",
+			Quantity:    1.00,
+			UnitAmount:  10.50,
+			AccountCode: "200",
+		}},
+	}
+
+	// Update one field of the invoice
+	invoice.Reference = "New reference"
+
+	i, err := client.Invoices.Update(ctx, invoice)
+	if err != nil {
+		return nil, err
+	}
+
+	// All good
+	return i, nil
 }
