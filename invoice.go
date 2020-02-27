@@ -123,7 +123,7 @@ func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) (
 }
 
 // Update updates an invoice in Xero.
-// It receives an existing Xero invoice and does a POST request to update it using it InvoiceID.
+// It receives an existing Xero invoice and does a POST request to update it using the existing InvoiceID.
 func (s *InvoicesService) Update(ctx context.Context, invoice *Invoice) (*Invoice, error) {
 	if invoice.InvoiceID == "" {
 		return nil, errors.New("the InvoiceID field must not be empty")
