@@ -36,10 +36,10 @@ type Invoice struct {
 	ExpectedPaymentDate string         `json:"ExpectedPaymentDate,omitempty"`
 	PlannedPaymentDate  string         `json:"PlannedPaymentDate,omitempty"`
 	HasAttachments      bool           `json:"HasAttachments,omitempty"`
-	Payments            *[]Payment     `json:"Payments,omitempty"`
-	CreditNotes         *[]CreditNote  `json:"CreditNotes,omitempty"`
-	Prepayments         *[]Prepayment  `json:"Prepayments,omitempty"`
-	OverPayments        *[]OverPayment `json:"Overpayments,omitempty"`
+	Payments            []Payment     `json:"Payments,omitempty"`
+	CreditNotes         []CreditNote  `json:"CreditNotes,omitempty"`
+	Prepayments         []Prepayment  `json:"Prepayments,omitempty"`
+	OverPayments        []OverPayment `json:"Overpayments,omitempty"`
 	AmountDue           float64        `json:"AmountDue,omitempty"`
 	AmountPaid          float64        `json:"AmountPaid,omitempty"`
 	CISDeduction        string         `json:"CISDeduction,omitempty"`
