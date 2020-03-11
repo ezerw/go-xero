@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"golang.org/x/oauth2"
 
-	"github.com/ezerw/xero"
+	"github.com/ezerw/go-xero"
 )
 
 const (
