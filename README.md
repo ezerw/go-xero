@@ -22,7 +22,7 @@ if err != nil {
     fmt.Println(fmt.Errorf("error getting invoices: %v", err))
 }
 ```
-To filter and paginate invoices you might use the same `List` method but passing pass an 
+To filter and paginate invoices you might use the same `List` method but passing a 
 struct of type `InvoiceListOptions` as second parameter specifying those fields that will be included as query 
 parameters part of the request URL
 e.g:
