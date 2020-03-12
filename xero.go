@@ -9,6 +9,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -80,11 +83,11 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	//TODO: handle different errors by status code
 	switch res.StatusCode {
 	case http.StatusUnauthorized:
-		return nil, fmt.Errorf("token has expired or is not valid %d", res.StatusCode)
+		return nil, fmt.Errorf("go-xero: token has expired or is not valid %d", res.StatusCode)
 	case http.StatusBadRequest:
 		var err BadRequestError
 		if err := json.NewDecoder(res.Body).Decode(&err); err != nil {
-			return nil, fmt.Errorf("failed to read error response body %s", err)
+			return nil, fmt.Errorf("go-xero: failed to read error response body %s", err)
 		}
 		return nil, err
 	}
@@ -129,4 +132,26 @@ func (c *Client) NewRequest(method string, url string, body interface{}) (*http.
 	}
 
 	return req, nil
+}
+
+// addOptions adds the parameters in opt as URL query parameters to s. opt
+// must be a struct whose fields may contain "url" tags.
+func addOptions(s string, opts interface{}) (string, error) {
+	v := reflect.ValueOf(opts)
+	if v.Kind() == reflect.Ptr && v.IsNil() {
+		return s, nil
+	}
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+
+	qs, err := query.Values(opts)
+	if err != nil {
+		return s, err
+	}
+
+	u.RawQuery = qs.Encode()
+	return u.String(), nil
 }

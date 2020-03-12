@@ -15,47 +15,32 @@ const (
 
 func main() {
 	ctx := context.Background()
-
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: AccessToken})
-	httpClient := oauth2.NewClient(ctx, tokenSource)
+	client := xero.NewClient(
+		oauth2.NewClient(ctx, tokenSource),
+		xero.TenantID(TenantID),
+	)
 
-	xeroClient := xero.NewClient(httpClient, xero.TenantID(TenantID))
+	opts := xero.InvoiceListOptions{
+		InvoiceNumbers: "INV-0016,INV-0008", // comma-separated list of invoice numbers
+	}
 
-	// Update an invoice
-	i, err := updateInvoice(ctx, xeroClient)
+	// List Invoices
+	invoices, err := listInvoices(ctx, client, &opts)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	fmt.Printf("Updated invoice #%s", i.InvoiceNumber)
-}
-
-func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
-	invoice := &xero.Invoice{
-		InvoiceID: "50a9f77e-caf4-40ef-9ab0-0c771accfdbf",
-		Type:      "ACCREC",
-		Contact: xero.Contact{
-			Name: "New",
-		},
-		Reference:       "Some reference",
-		LineAmountTypes: "Inclusive",
-		LineItems: []xero.LineItem{{
-			Description: "Line Item #2",
-			Quantity:    1.00,
-			UnitAmount:  10.50,
-			AccountCode: "200",
-		}},
+	for _, i := range invoices {
+		fmt.Printf("Invoice #%s\n", i.InvoiceNumber)
 	}
 
-	// Update one field of the invoice
-	invoice.Reference = "New reference"
-
-	i, err := client.Invoices.Update(ctx, invoice)
-	if err != nil {
-		return nil, err
-	}
-
-	// All good
-	return i, nil
+	// Update an invoice
+	//i, err := updateInvoice(ctx, client)
+	//if err != nil {
+	//	fmt.Println(err.Error())
+	//	return
+	//}
+	//fmt.Printf("Updated invoice #%s", i.InvoiceNumber)
 }
