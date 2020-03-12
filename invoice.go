@@ -103,6 +103,22 @@ func (s *InvoicesService) Create(ctx context.Context, invoice *Invoice) (*Invoic
 	return i.Invoices[0], nil
 }
 
+// CreateMulti creates multiple invoices on Xero in a single call.
+func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) ([]*Invoice, error) {
+	req, err := s.client.NewRequest(http.MethodPut, InvoicesBaseURL, invoices)
+	if err != nil {
+		return nil, err
+	}
+
+	var i *Invoices
+	_, err = s.client.Do(ctx, req, &i)
+	if err != nil {
+		return nil, err
+	}
+
+	return i.Invoices, nil
+}
+
 // Update updates an invoice in Xero.
 // It receives an existing Xero invoice and does a POST request to update it using the existing InvoiceID.
 func (s *InvoicesService) Update(ctx context.Context, invoice *Invoice) (*Invoice, error) {

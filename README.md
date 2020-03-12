@@ -15,20 +15,34 @@ httpClient := oauth2.NewClient(ctx, tokenSource)
 xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
 ````
 
-### Get tenant invoices
+### Get invoices
 ```go
-invoices, err := xeroClient.Invoices.List(ctx)
+invoices, err := xeroClient.Invoices.List(ctx, nil)
 if err != nil {
     fmt.Println(fmt.Errorf("error getting invoices: %v", err))
 }
 ```
-### Get an Invoice by ID
+To filter and paginate invoices you might use the same `List` method but passing pass an 
+struct of type `InvoiceListOptions` as second parameter specifying those fields that will be included as query 
+parameters part of the request URL
+e.g:
 ```go
-invoices, err := xeroClient.Invoices.GetById(ctx, "INVOICE_ID")
-if err != nil {
-    fmt.Println(fmt.Errorf("error getting invoice: %v", err))
+opts := InvoiceListOptions {
+	InvoiceID: "",       // specific InvoiceID
+	InvoiceNumber: "",   // specific InvoiceNumber
+	IDs: "",             // comma-separated list of InvoicesIDs
+	InvoiceNumbers: "",  // comma-separated list of InvoiceNumbers
+	ContactIDs: "",      // comma-separated list of ContactIDs
+	Statuses: "",        // comma-separated list of Statuses (DRAFT,SUBMITTED, etc)
+	CreatedByMyApp: "",  // when set to true you'll only retrieve Invoices created by your app
+	Page: "",            // Page:"1" – Up to 100 invoices will be returned in a single API call with line items shown for each invoice
 }
+
+filteredInvoices, err := xeroClient.Invoices.List(ctx, &opts)
+...
 ```
+This will always return a list of `0`, One or more `Invoices`  
+
 ### Create an Invoice
 ```go
 lineItem := xero.LineItem{
