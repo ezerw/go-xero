@@ -15,7 +15,6 @@ type InvoicesService service
 const (
 	// Invoice Statuses
 	// https://developer.xero.com/documentation/api/invoices#status-codes
-
 	InvoiceStatusDraft      = "DRAFT"
 	InvoiceStatusSubmitted  = "SUBMITTED"
 	InvoiceStatusAuthorised = "AUTHORISED"
