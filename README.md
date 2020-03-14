@@ -15,7 +15,7 @@ httpClient := oauth2.NewClient(ctx, tokenSource)
 xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
 ````
 
-### Get invoices
+### Get Invoices
 ```go
 invoices, err := xeroClient.Invoices.List(ctx, nil)
 if err != nil {
@@ -28,8 +28,6 @@ parameters part of the request URL
 e.g:
 ```go
 opts := InvoiceListOptions {
-	InvoiceID: "",       // specific InvoiceID
-	InvoiceNumber: "",   // specific InvoiceNumber
 	IDs: "",             // comma-separated list of InvoicesIDs
 	InvoiceNumbers: "",  // comma-separated list of InvoiceNumbers
 	ContactIDs: "",      // comma-separated list of ContactIDs
@@ -41,7 +39,22 @@ opts := InvoiceListOptions {
 filteredInvoices, err := xeroClient.Invoices.List(ctx, &opts)
 ...
 ```
-This will always return a list of `0`, One or more `Invoices`  
+This will always return a list of `0` or more `Invoices`  
+
+### Get an Invoice
+You can use the `GetByID` method to get a single `Invoice`. This method accepts either an `InvoiceID` or an `InvoiceNumber`
+as a resource identifier.
+e.g:
+```go
+ID := "00000000-0000-0000-0000-000000000000" // or "INV-546" (InvoiceNumber)
+invoice, err := xeroClient.Invoices.GetByID(ctx, ID)
+if err != nil {
+    fmt.Println(fmt.Errorf("error: %v", err))
+    return
+}
+
+fmt.Printf("%+v\n", invoice)
+````
 
 ### Create an Invoice
 ```go
