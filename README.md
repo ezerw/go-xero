@@ -12,7 +12,14 @@ Note that a `XERO_TENANT_ID` is required creating the Xero client instance.
 If you have an OAuth2 `XERO_ACCESS_TOKEN`, you can use it with the oauth2 library using:
 
 ```go
-import "golang.org/x/oauth2"
+import (
+	"context"
+	"fmt"
+
+	"golang.org/x/oauth2"
+
+	"github.com/ezerw/go-xero"
+)
 
 func main() {
     tokenSource := oauth2.StaticTokenSource(
