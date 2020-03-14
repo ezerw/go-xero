@@ -21,23 +21,8 @@ func main() {
 		xero.TenantID(TenantID),
 	)
 
-	//opts := xero.InvoiceListOptions{
-	//	InvoiceNumbers: "INV-0016,INV-0008", // comma-separated list of invoice numbers
-	//}
-
-	// List Invoices
-	//invoices, err := listInvoices(ctx, client, &opts)
-	//if err != nil {
-	//	fmt.Println(err.Error())
-	//	return
-	//}
-	//
-	//for _, i := range invoices {
-	//	fmt.Printf("Invoice #%s\n", i.InvoiceNumber)
-	//}
-
-	//Update an invoice
-	i, err := createInvoice(ctx, client)
+	//Create an invoice
+	i, err := create(ctx, client)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

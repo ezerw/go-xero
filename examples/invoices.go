@@ -5,40 +5,43 @@ import (
 	"github.com/ezerw/go-xero"
 )
 
-func listInvoices(ctx context.Context, client *xero.Client, opts *xero.InvoiceListOptions) ([]*xero.Invoice, error) {
+var invoice = &xero.Invoice{
+	InvoiceID:       "96988e67-ecf9-466d-bfbf-0afa1725a649",
+	Type:            "ACCREC",
+	Reference:       "Some reference",
+	LineAmountTypes: "Inclusive",
+	LineItems: []xero.LineItem{{
+		Description: "Line Item #1",
+		Quantity:    1.00,
+		UnitAmount:  10.50,
+		AccountCode: "200",
+	}, {
+		Description: "Line Item #2",
+		Quantity:    3.50,
+		UnitAmount:  27.30,
+		AccountCode: "200",
+	}},
+}
+
+// Get a list of invoices.
+func list(ctx context.Context, client *xero.Client, opts *xero.InvoiceListOptions) ([]*xero.Invoice, error) {
 	return client.Invoices.List(ctx, opts)
 }
 
-func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
-	// Update an invoice
-	invoice := &xero.Invoice{
-		InvoiceID: "50a9f77e-caf4-40ef-9ab0-0c771accfdbf",
-		Type:      "ACCREC",
-		Reference:       "Some reference",
-		LineAmountTypes: "Inclusive",
-		LineItems: []xero.LineItem{{
-			Description: "Line Item #2",
-			Quantity:    1.00,
-			UnitAmount:  10.50,
-			AccountCode: "200",
-		}},
-	}
-
-	// Update one field of the invoice
-	invoice.Reference = "New reference 45"
-
-	return client.Invoices.Update(ctx, invoice)
+// Get one invoice by InvoiceID or InvoiceNumber identifier.
+func getByID(ctx context.Context, client *xero.Client, ID string) (*xero.Invoice, error) {
+	return client.Invoices.GetByID(ctx, ID)
 }
 
-func createInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
-	invoice := &xero.Invoice{
-		LineItems: []xero.LineItem{{
-			Description: "Line Item #2",
-			Quantity:    1.00,
-			UnitAmount:  10.50,
-			AccountCode: "200",
-		}},
-	}
-
+// Create one invoice.
+func create(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
 	return client.Invoices.Create(ctx, invoice)
+}
+
+// Update an Invoice.
+func update(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
+	// Update one field of the invoice
+	invoice.Reference = "New reference 69"
+
+	return client.Invoices.Update(ctx, invoice)
 }
