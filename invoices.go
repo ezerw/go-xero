@@ -12,6 +12,15 @@ var InvoicesBaseURL = fmt.Sprintf("%s/Invoices", baseURL)
 // InvoicesService is the service to talk to invoices endpoint in Xero.
 type InvoicesService service
 
+const (
+	// Invoice Statuses
+	// https://developer.xero.com/documentation/api/invoices#status-codes
+
+	InvoiceStatusDraft      = "DRAFT"
+	InvoiceStatusSubmitted  = "SUBMITTED"
+	InvoiceStatusAuthorised = "AUTHORISED"
+)
+
 // Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation.
 type Invoice struct {
 	Type                string        `json:"Type"`
