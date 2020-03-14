@@ -6,8 +6,10 @@ import (
 	"net/http"
 )
 
+// InvoicesBaseURL holds the invoices API base endpoint.
 var InvoicesBaseURL = fmt.Sprintf("%s/Invoices", baseURL)
 
+// InvoicesService is the service to talk to invoices endpoint in Xero.
 type InvoicesService service
 
 // Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation.
@@ -64,7 +66,6 @@ type InvoiceListOptions struct {
 // List fetch the full list of invoices adding optional params to the URL.
 // https://developer.xero.com/documentation/api/invoices#page-invoice
 func (s *InvoicesService) List(ctx context.Context, opts *InvoiceListOptions) ([]*Invoice, error) {
-
 	u, err := addOptions(InvoicesBaseURL, opts)
 	if err != nil {
 		return nil, err

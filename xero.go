@@ -49,6 +49,7 @@ type Client struct {
 
 	// Services used for talking to different parts of the Xero API.
 	Invoices *InvoicesService
+	Accounts *AccountsService
 }
 
 // NewClient returns a new Xero API client. If a nil httpClient is
@@ -64,6 +65,7 @@ func NewClient(httpClient *http.Client, tenantID TenantID) *Client {
 
 	// Available Xero API resources
 	c.Invoices = (*InvoicesService)(&c.common)
+	c.Accounts = (*AccountsService)(&c.common)
 
 	return c
 }
@@ -74,13 +76,11 @@ func NewClient(httpClient *http.Client, tenantID TenantID) *Client {
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	res, err := c.client.Do(req)
 	if err != nil {
-		//TODO: handle rate limit, custom response errors, etc
 		return nil, err
 	}
 
 	defer res.Body.Close()
 
-	//TODO: handle different errors by status code
 	switch res.StatusCode {
 	case http.StatusUnauthorized:
 		invalidTokenError := &InvalidTokenError{}
@@ -96,14 +96,15 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 			return nil, err
 		}
 
+		// Return a JSON string with the list of errors for more detailed view of what happened.
 		b, err := json.Marshal(badRequestError)
 		if err != nil {
 			return nil, err
 		}
-		// Return a JSON string with the list of errors for more detailed view of what happened
 		return nil, errors.New(string(b))
 	}
 
+	// For POST and PUT requests
 	if v != nil {
 		if err := json.NewDecoder(res.Body).Decode(v); err != nil {
 			if !errors.Is(err, io.EOF) { // ignore EOF errors caused by empty response body

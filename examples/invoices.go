@@ -24,22 +24,22 @@ var invoice = &xero.Invoice{
 }
 
 // Get a list of invoices.
-func list(ctx context.Context, client *xero.Client, opts *xero.InvoiceListOptions) ([]*xero.Invoice, error) {
+func listInvoices(ctx context.Context, client *xero.Client, opts *xero.InvoiceListOptions) ([]*xero.Invoice, error) {
 	return client.Invoices.List(ctx, opts)
 }
 
 // Get one invoice by InvoiceID or InvoiceNumber identifier.
-func getByID(ctx context.Context, client *xero.Client, ID string) (*xero.Invoice, error) {
+func getInvoiceByID(ctx context.Context, client *xero.Client, ID string) (*xero.Invoice, error) {
 	return client.Invoices.GetByID(ctx, ID)
 }
 
 // Create one invoice.
-func create(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
+func createInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
 	return client.Invoices.Create(ctx, invoice)
 }
 
 // Update an Invoice.
-func update(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
+func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
 	// Update one field of the invoice
 	invoice.Reference = "New reference 69"
 

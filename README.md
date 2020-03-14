@@ -34,4 +34,5 @@ func main() {
 ````
 
 #### Please refer to Wiki for examples:
-[Invoices](https://github.com/ezerw/go-xero/wiki/Invoices)
+- [Invoices](https://github.com/ezerw/go-xero/wiki/Invoices)
+- [Accounts](https://github.com/ezerw/go-xero/wiki/Accounts)
