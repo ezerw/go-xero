@@ -14,9 +14,6 @@ func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, err
 	invoice := &xero.Invoice{
 		InvoiceID: "50a9f77e-caf4-40ef-9ab0-0c771accfdbf",
 		Type:      "ACCREC",
-		Contact: xero.Contact{
-			Name: "New",
-		},
 		Reference:       "Some reference",
 		LineAmountTypes: "Inclusive",
 		LineItems: []xero.LineItem{{
@@ -31,4 +28,17 @@ func updateInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, err
 	invoice.Reference = "New reference 45"
 
 	return client.Invoices.Update(ctx, invoice)
+}
+
+func createInvoice(ctx context.Context, client *xero.Client) (*xero.Invoice, error) {
+	invoice := &xero.Invoice{
+		LineItems: []xero.LineItem{{
+			Description: "Line Item #2",
+			Quantity:    1.00,
+			UnitAmount:  10.50,
+			AccountCode: "200",
+		}},
+	}
+
+	return client.Invoices.Create(ctx, invoice)
 }

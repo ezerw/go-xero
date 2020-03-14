@@ -83,13 +83,25 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	//TODO: handle different errors by status code
 	switch res.StatusCode {
 	case http.StatusUnauthorized:
-		return nil, fmt.Errorf("go-xero: token has expired or is not valid %d", res.StatusCode)
-	case http.StatusBadRequest:
-		var err BadRequestError
-		if err := json.NewDecoder(res.Body).Decode(&err); err != nil {
-			return nil, fmt.Errorf("go-xero: failed to read error response body %s", err)
+		invalidTokenError := &InvalidTokenError{}
+		err := parseResponse(res, invalidTokenError)
+		if err != nil {
+			return nil, err
 		}
-		return nil, err
+		return nil, invalidTokenError
+	case http.StatusBadRequest:
+		badRequestError := &BadRequestError{}
+		err := parseResponse(res, badRequestError)
+		if err != nil {
+			return nil, err
+		}
+
+		b, err := json.Marshal(badRequestError)
+		if err != nil {
+			return nil, err
+		}
+		// Return a JSON string with the list of errors for more detailed view of what happened
+		return nil, errors.New(string(b))
 	}
 
 	if v != nil {
@@ -132,6 +144,15 @@ func (c *Client) NewRequest(method string, url string, body interface{}) (*http.
 	}
 
 	return req, nil
+}
+
+// parseResponse decodes the response body into the target
+func parseResponse(res *http.Response, target interface{}) error {
+	err := json.NewDecoder(res.Body).Decode(target)
+	if err != nil {
+		return fmt.Errorf("failed to read error response body: %s", err)
+	}
+	return nil
 }
 
 // addOptions adds the parameters in opt as URL query parameters to s. opt

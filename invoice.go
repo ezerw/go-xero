@@ -2,7 +2,6 @@ package xero
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 )
@@ -54,8 +53,6 @@ type Invoices struct {
 
 // InvoiceListOptions specifies the optional parameters to Get Invoices
 type InvoiceListOptions struct {
-	InvoiceID      string `url:"InvoiceID,omitempty"`
-	InvoiceNumber  string `url:"InvoiceNumber,omitempty"`
 	IDs            string `url:"IDs,omitempty"`
 	InvoiceNumbers string `url:"InvoiceNumbers,omitempty"`
 	ContactIDs     string `url:"ContactIDs,omitempty"`
@@ -85,6 +82,31 @@ func (s *InvoicesService) List(ctx context.Context, opts *InvoiceListOptions) ([
 	}
 
 	return i.Invoices, nil
+}
+
+// GetByID fetch an Invoice by InvoiceNumber or InvoiceID from Xero and returns it.
+func (s *InvoicesService) GetByID(ctx context.Context, ID string) (*Invoice, error) {
+	if ID == "" {
+		return nil, ValidationNotEmptyError{Field: "ID"}
+	}
+	u := fmt.Sprintf("%s/%s", InvoicesBaseURL, ID)
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var i *Invoices
+	_, err = s.client.Do(ctx, req, &i)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(i.Invoices) == 0 {
+		return nil, ResourceNotFoundError{Resource: "invoice", ID: ID}
+	}
+
+	return i.Invoices[0], nil
 }
 
 // Create creates and invoice.
@@ -123,11 +145,11 @@ func (s *InvoicesService) CreateMulti(ctx context.Context, invoices *Invoices) (
 // It receives an existing Xero invoice and does a POST request to update it using the existing InvoiceID.
 func (s *InvoicesService) Update(ctx context.Context, invoice *Invoice) (*Invoice, error) {
 	if invoice.InvoiceID == "" {
-		return nil, errors.New("the InvoiceID field must not be empty")
+		return nil, ValidationNotEmptyError{Field: "InvoiceID"}
 	}
 
 	if invoice.Type == "" {
-		return nil, errors.New("the Type field must not be empty")
+		return nil, ValidationNotEmptyError{Field: "Type"}
 	}
 
 	req, err := s.client.NewRequest(http.MethodPost, InvoicesBaseURL, invoice)
