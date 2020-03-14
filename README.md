@@ -8,17 +8,22 @@ Instead, when creating a new client, pass an `http.Client` that can handle authe
 The easiest and recommended way to do this is using the [oauth2](https://github.com/golang/oauth2) library, 
 but you can always use any other library that provides an `http.Client`.
 
-### Usage ###
+Note that a `XERO_TENANT_ID` is required creating the Xero client instance.
+If you have an OAuth2 `XERO_ACCESS_TOKEN`, you can use it with the oauth2 library using:
 
 ```go
-tokenSource := oauth2.StaticTokenSource(
-    &oauth2.Token{AccessToken: "ACCESS_TOKEN"}
-)
+import "golang.org/x/oauth2"
 
-ctx := context.Background()
-httpClient := oauth2.NewClient(ctx, tokenSource)
-
-xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
+func main() {
+    tokenSource := oauth2.StaticTokenSource(
+        &oauth2.Token{AccessToken: "ACCESS_TOKEN"}
+    )
+    
+    ctx := context.Background()
+    httpClient := oauth2.NewClient(ctx, tokenSource)
+    
+    xeroClient := xero.NewClient(httpClient, "XERO_TENANT_ID")
+}
 ````
 
 #### Please refer to Wiki for examples:
