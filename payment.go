@@ -14,11 +14,11 @@ type Payment struct {
 	PaymentType    string       `json:"PaymentType,omitempty"`
 	UpdatedDateUTC string       `json:"UpdatedDateUTC,omitempty"`
 	BatchPaymentID string       `json:"BatchPaymentID,omitempty"`
-	Account        Account      `json:"Account,omitempty"`
-	Invoice        Invoice      `json:"Invoice,omitempty"`
-	CreditNote     CreditNote   `json:"CreditNote,omitempty"`
+	Account        *Account      `json:"Account,omitempty"`
+	Invoice        *Invoice      `json:"Invoice,omitempty"`
+	CreditNote     *CreditNote   `json:"CreditNote,omitempty"`
 	Prepayments    []Prepayment `json:"Prepayments,omitempty"`
-	Overpayment    OverPayment  `json:"Overpayment,omitempty"`
+	Overpayment    *OverPayment  `json:"Overpayment,omitempty"`
 }
 
 // Payments is a collection of Payments

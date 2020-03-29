@@ -30,13 +30,14 @@ const (
 // TenantID used when communicating with the Xero API.
 type TenantID string
 
-type service struct {
-	client *Client
+// HTTPClient interface
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }
 
 // A Client manages communication with the Xero API.
 type Client struct {
-	client *http.Client
+	client HTTPClient
 
 	// Base URL for API requests.
 	BaseURL *url.URL
@@ -52,9 +53,13 @@ type Client struct {
 	Accounts *AccountsService
 }
 
+type service struct {
+	client *Client
+}
+
 // NewClient returns a new Xero API client. If a nil httpClient is
 // provided, a new http.Client will be used.
-func NewClient(httpClient *http.Client, tenantID TenantID) *Client {
+func NewClient(httpClient HTTPClient, tenantID TenantID) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
@@ -82,7 +87,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	defer res.Body.Close()
 
 	switch res.StatusCode {
-	case http.StatusUnauthorized:
+	case http.StatusUnauthorized, http.StatusForbidden:
 		invalidTokenError := &InvalidTokenError{}
 		err := parseResponse(res, invalidTokenError)
 		if err != nil {

@@ -23,7 +23,7 @@ const (
 // Invoice is an Accounts Payable or Accounts Receivable document in a Xero organisation.
 type Invoice struct {
 	Type                string        `json:"Type"`
-	Contact             Contact       `json:"Contact"`
+	Contact             *Contact       `json:"Contact"`
 	Date                string        `json:"Date,omitempty"`
 	DueDate             string        `json:"DueDate,omitempty"`
 	Status              string        `json:"Status,omitempty"`

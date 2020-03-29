@@ -7,9 +7,9 @@ import (
 )
 
 var account = &xero.Account{
-	Code: "12315",
-	Name: "Some original name22",
-	Type: "BANK",
+	Code: "999",
+	Name: "Current Account",
+	Type: "CURRENT",
 }
 
 // Get a list of accounts.

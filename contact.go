@@ -68,10 +68,10 @@ type Contact struct {
 	PaymentTerms                string             `json:"PaymentTerms,omitempty"`
 	ContactGroups               []ContactGroup     `json:"ContactGroups,omitempty"`
 	Website                     string             `json:"Website,omitempty"`
-	BrandingTheme               BrandingTheme     `json:"BrandingTheme,omitempty"`
-	BatchPayments               BatchPayment      `json:"BatchPayments,omitempty"`
+	BrandingTheme               *BrandingTheme     `json:"BrandingTheme,omitempty"`
+	BatchPayments               *BatchPayment      `json:"BatchPayments,omitempty"`
 	Discount                    string             `json:"Discount,omitempty"`
-	Balances                    Balances          `json:"Balances,omitempty"`
+	Balances                    *Balances          `json:"Balances,omitempty"`
 	HasAttachments              bool               `json:"HasAttachments,omitempty"`
 }
 
