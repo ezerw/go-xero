@@ -1,4 +1,6 @@
-# go-xero
+## WORK IN PROGRESS
+
+## go-xero
 
 go-xero is a Go client library for accessing the [Xero API](https://developer.xero.com/documentation/oauth2/overview).
 
